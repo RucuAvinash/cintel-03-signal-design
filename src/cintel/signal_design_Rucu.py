@@ -29,12 +29,12 @@ Questions to Consider
 
 Paths (relative to repo root)
 
-    INPUT FILE: data/system_metrics_case.csv
-    OUTPUT FILE: artifacts/signals_case.csv
+    INPUT FILE: data/system_metrics_RucuAvinash.csv
+    OUTPUT FILE: artifacts/signals_RucuAvinash.csv
 
 Terminal command to run this file from the root project folder
 
-    uv run python -m cintel.signal_design_case
+    uv run python -m cintel.signal_design_Rucu
 
 OBS:
   Don't edit this file - it should remain a working example.
@@ -64,8 +64,8 @@ ARTIFACTS_DIR: Final[Path] = ROOT_DIR / "artifacts"
 
 # === DECLARE GLOBAL CONSTANTS FOR FILE PATHS ===
 
-DATA_FILE: Final[Path] = DATA_DIR / "system_metrics_Rucu.csv"
-OUTPUT_FILE: Final[Path] = ARTIFACTS_DIR / "signals_Rucu.csv"
+DATA_FILE: Final[Path] = DATA_DIR / "system_metrics_Rucu_custom.csv"
+OUTPUT_FILE: Final[Path] = ARTIFACTS_DIR / "signals_Rucu_custom.csv"
 
 
 # === DEFINE THE MAIN FUNCTION ===
@@ -206,7 +206,7 @@ def main() -> None:
     # --------------------------------------------------------------
     # STEP 3.0: (MODIFICATION) ADD A LOAD INDEX CLASSIFICATION SIGNAL
     # --------------------------------------------------------------
-    df_with_signals = df_with_signals.with_columns(
+    df_with_load_index = df_with_signals.with_columns(
         pl.when((pl.col("requests") <= 50) | (pl.col("errors") <= 1))
         .then(pl.lit("Low load Index"))
         .when(
@@ -226,7 +226,7 @@ def main() -> None:
     # Keep the original columns and the new signal columns together.
     # And use the select() method to choose which columns
     # to include in the final output.
-    signals_df = df_with_signals.select(
+    signals_df = df_with_load_index.select(
         [
             "requests",
             "errors",
@@ -236,6 +236,8 @@ def main() -> None:
             "throughput",
             "weighted_load_index",
             "load_index_category",
+            "quarter",
+            "system_name",
         ]
     )
 
